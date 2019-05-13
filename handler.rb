@@ -2,7 +2,10 @@ require 'json'
 require 'elasticsearch'
 
 def hello(event:, context:)
-  client = Elasticsearch::Client.new url: ENV['ES_HOST'], log: ENV['ENV'] == 'development'
+  is_development_env = ENV['ENV'] == 'development'
+  body = is_development_env ? event['body'] : JSON.parse(event['body'])
+
+  client = Elasticsearch::Client.new url: ENV['ES_HOST'], log: is_development_env
   search = client.search(
     index: 'logstash-*',
     body: {
@@ -11,12 +14,12 @@ def hello(event:, context:)
           should: [
             {
               terms: {
-                user_id: [1, 2, 3, 4, 5]
+                user_id: body['user_ids']
               }
             },
             {
               terms: {
-                'params.user_id': [1, 2, 3, 4, 5]
+                'params.user_id': body['user_ids']
               }
             }
           ]
@@ -25,18 +28,11 @@ def hello(event:, context:)
     }
   )
 
-  if ENV['ENV'] == 'development'
-    {
+  {
+    statusCode: 200,
+    body: JSON.generate(
       search_result: search['hits']['hits'],
       count: search['hits']['hits'].count
-    }
-  else
-    {
-      statusCode: 200,
-      body: JSON.generate(
-        search_result: search['hits']['hits'],
-        count: search['hits']['hits'].count
-      )
-    }
-  end
+    )
+  }
 end

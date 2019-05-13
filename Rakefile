@@ -6,8 +6,20 @@ task :deploy do
   end
 end
 
+task :update_function, :name do |_task, args|
+  system "sls deploy function -f #{args[:name]}"
+end
+
+# Tasks for development purpose only.
+
 task :dev_build do
   system 'bundle install'
+end
+
+# E.g. rake invoke['1 2 3']
+task :invoke, :user_ids do |_task, args|
+  user_ids = args[:user_ids].split ' '
+  system "sls invoke local -f hello --data '{ \"body\": { \"user_ids\": #{user_ids} } }'"
 end
 
 task :add_mock_data do
