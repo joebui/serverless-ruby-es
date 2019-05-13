@@ -27,12 +27,13 @@ def hello(event:, context:)
       }
     }
   )
+  search_result = search['hits']['hits']
 
   {
     statusCode: 200,
     body: JSON.generate(
-      search_result: search['hits']['hits'],
-      count: search['hits']['hits'].count
+      search_result: search_result,
+      count: search_result.count
     )
   }
 end
