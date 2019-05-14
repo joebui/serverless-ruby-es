@@ -1,11 +1,10 @@
 require 'json'
 require 'elasticsearch'
 
-def hello(event:, context:)
-  is_development_env = ENV['ENV'] == 'development'
-  body = is_development_env ? event['body'] : JSON.parse(event['body'])
+def wipe_log(event:, context:)
+  body = JSON.parse(event['body'])
 
-  client = Elasticsearch::Client.new url: ENV['ES_HOST'], log: is_development_env
+  client = Elasticsearch::Client.new url: ENV['ES_HOST'], log: ENV['ENV'] == 'development'
   search = client.search(
     index: 'logstash-*',
     body: {

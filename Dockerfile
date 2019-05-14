@@ -8,7 +8,8 @@ RUN apt-get update\
   && apt-get update \
   && apt-get install -y nodejs
 
-RUN npm install serverless@^v1.41.1 -g
+# Install serverless framework
+RUN npm install serverless@^v1.42.3 -g
 
 # Install Ruby
 RUN apt-get update\
@@ -22,14 +23,12 @@ RUN apt-get update\
   && rm -rf ruby-2.5.5 ruby-2.5.5.tar.gz\
   && gem install bundler -v 2.0.1 --no-rdoc --no-ri\
   && apt-get install -y git-core libxml2-dev libxslt1-dev libmagickwand-dev yasm tzdata\
-  && apt-get install -y openssh-server\
-  && mkdir /lambda
+  && apt-get install -y openssh-server
 
+RUN mkdir lambda
 WORKDIR /lambda
 
-ADD Gemfile Gemfile
-ADD Gemfile.lock Gemfile.lock
-ADD Rakefile Rakefile
+ADD . /lambda
 
 RUN rake dev_build
 

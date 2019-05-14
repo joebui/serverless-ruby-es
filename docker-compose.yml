@@ -1,18 +1,19 @@
 version: '2'
 services:
   lambda:
-    command: sh -c "bundle install; sleep infinity"
+    command: sh -c "bundle install; npm i; sls offline"
     image: sh-wipe-data
     environment:
       ES_HOST: "elasticsearch:9200"
       AWS_ACCESS_KEY_ID: "xxx"
       AWS_SECRET_ACCESS_KEY: "yyy"
       ENV: development
-      SLS_DEBUG: '*'
     volumes:
       - '.:/lambda'
     stdin_open: true
     tty: true
+    ports:
+      - 3000:3000
     container_name: 'lambda'
   elasticsearch:
     image: docker.elastic.co/elasticsearch/elasticsearch:6.4.2
