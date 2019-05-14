@@ -30,6 +30,6 @@ WORKDIR /lambda
 
 ADD . /lambda
 
-RUN rake dev_build
+RUN rake install_libraries
 
 RUN gem env

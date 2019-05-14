@@ -1,7 +1,7 @@
 version: '2'
 services:
   lambda:
-    command: sh -c "bundle install; npm i; sls offline"
+    command: sh -c "rake install_libraries; sls offline"
     image: sh-wipe-data
     environment:
       ES_HOST: "elasticsearch:9200"

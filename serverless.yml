@@ -26,6 +26,7 @@ functions:
         - Gemfile*
         - package*
         - node_modules/**
+        - .dockerignore
 
 plugins:
   - serverless-offline
